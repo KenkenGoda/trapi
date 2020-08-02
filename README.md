@@ -1,2 +1,2 @@
 # trapi
-Repository customized for machine learning
+Repository customized for machine learning cometition.
