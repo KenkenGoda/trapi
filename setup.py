@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="trapi",
-    version="0.1.1",
+    version="0.1.2",
     author="Shohei Goda",
     author_email="shohei.goda.12.1@gmail.com",
     description="You can use functions customized for machine learning cometitions",
