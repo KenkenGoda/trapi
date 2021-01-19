@@ -17,7 +17,7 @@ def train_with_lightgbm(
             **kwargs,
         )
     else:
-        model = lgb_tuner(
+        model = lgb_tuner.train(
             params,
             lgb_train,
             valid_sets=[lgb_train, lgb_valid],
