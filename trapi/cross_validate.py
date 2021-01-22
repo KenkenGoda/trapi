@@ -14,6 +14,7 @@ def cross_validate(cv, X, y, params, tune=False, **kwargs):
         fold = i + 1
         print("--------------------------------------------------")
         print(f"Fold: {fold}/{cv.get_n_splits()}")
+
         X_train, X_valid = X.iloc[train_idx], X.iloc[valid_idx]
         y_train, y_valid = y.iloc[train_idx], y.iloc[valid_idx]
 

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "trapi"
+version = "0.1.0"
+description = "Tools for machine learning competitions"
+authors = ["trapi <shohei.goda.12.1@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/KenkenGoda"
+repository = "https://github.com/KenkenGoda/trapi"
+documentation = ""
+keywords = ["lightgbm"]
+
+[tool.poetry.dependencies]
+python = "^3.7.5"
+pandas = "^1.2.1"
+scikit-learn = "^0.24.1"
+lightgbm = "^3.1.1"
+optuna = "^2.4.0"
+
+[tool.poetry.scripts]
+my-script = "trapi:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
