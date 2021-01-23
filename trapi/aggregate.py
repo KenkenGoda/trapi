@@ -1,18 +1,18 @@
 def aggregate(df, by, target, methods, renamed_columns=None, as_index=False):
     """
-    The function to aggregate columns by target column with target methods.
+    Function to aggregate columns by target column with target methods.
     You can select methods from next:
         "sum", "max", "min", "mean", "count", "std", "var", "median", "prod", "corr"
 
     Args:
-        df (pd.DataFrame): The dataframe to aggregate.
-        by (str or list(str)): The target columns aggregated by.
-        target (str): The target column to aggregate.
-        methods (list(str)): The methods for aggregation.
-        renamed_columns (list(str), optional): The renamed columns after aggregated. Defaults to None.
+        df (pd.DataFrame): Dataframe to aggregate.
+        by (str or list(str)): Target columns aggregated by.
+        target (str): Target column to aggregate.
+        methods (list(str)): Methods for aggregation.
+        renamed_columns (list(str), optional): Renamed columns after aggregated. Defaults to None.
 
     Returns:
-        pd.DataFrame: The dataframe with aggregated columns.
+        pd.DataFrame: Dataframe with aggregated columns.
     """
     assert type(methods) == list, f"type of methods, {type(methods)}, is not list"
     if renamed_columns is not None:
