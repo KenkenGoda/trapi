@@ -4,13 +4,30 @@ import pandas as pd
 from trapi.train import train_with_lightgbm
 
 
-def cross_validate(cv, X, y, params, tune=False, **kwargs):
+def cross_validate(cv, X, y, params, groups=None, tune=False, **kwargs):
+    """
+    Function to run cross-validation.
+
+    Args:
+        cv (BaseCrossValidator): Cross-validation generator.
+        X (pd.DataFrame): Training data.
+        y (pd.Series): Target.
+        params (dict(str)): Lightgbm parameters.
+        groups (pd.Series, optional): Group labels for the samples. Defaults to None.
+        tune (bool, optional): If run tuning or not. Defaults to False.
+
+    Returns:
+        list(Booster): List of trained lightgbm boosters.
+        np.array: Target true values.
+        np.array: Target predicted values.
+        pd.DataFrame: DataFrame with ["feature", "split", "gain", "fold"] columns.
+    """
     models = []
     y_true = np.array([])
     y_pred = np.array([])
     df_imp = pd.DataFrame()
 
-    for i, (train_idx, valid_idx) in enumerate(cv.split(X, y)):
+    for i, (train_idx, valid_idx) in enumerate(cv.split(X, y, groups=groups)):
         fold = i + 1
         print("--------------------------------------------------")
         print(f"Fold: {fold}/{cv.get_n_splits()}")
