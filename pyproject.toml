@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "trapi"
-version = "0.1.1"
+version = "0.1.2"
 description = "Tools for machine learning competitions"
 authors = ["trapi <shohei.goda.12.1@gmail.com>"]
 license = "MIT"
