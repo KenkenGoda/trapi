@@ -25,3 +25,20 @@ def plot_feature_importance(df, importance_type="split", n_plot=20, figsize=(10,
     plt.figure(figsize=figsize)
     sns.barplot(x=importance_type, y="feature", data=df_plot)
     plt.show()
+
+
+def plot_prediction_distribution(valid_pred, test_pred, figsize=(7, 5)):
+    """
+    Function to plot prediction distribution.
+
+    Args:
+        valid_pred (np.array): Predicted values of validation.
+        test_pred (np.array): Predicted values of test.
+        figsize (tuple, optional): Figure size. Defaults to (7, 5).
+    """
+    plt.figure(figsize=figsize)
+    sns.histplot(valid_pred, stat="density", color="blue", alpha=0.3, label="valid")
+    sns.histplot(test_pred, stat="density", color="red", alpha=0.3, label="test")
+    plt.legend()
+    plt.grid()
+    plt.show()
