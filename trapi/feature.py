@@ -7,27 +7,46 @@ from sklearn.preprocess import LabelEncoder
 class BaseBlock:
     """
     Base block class for feature generator.
-    This has fit and transform functions, like machine learning flow, as default.
-    You can make block class as below:
-    ---------------------------------------------------------------------------
-    AgeAggregatedBlock(BaseBlock):
-        def __init__(self, column, aggs, fill_value=0):
-            self.column = column
-            self.aggs = aggs
-            self.fill_value = fill_value
+    This class has fit and transform functions, like machine learning flow, as default.
+    You can use and also make block classes as below.
 
-        def fit(self, input_df, y=None):
-            self.agg_df_ = input_df.groupby(self.column)["age"].agg(self.aggs)
-            return self.transform(input_df)
+    Example:
+        from trapi.feature import *
 
-        def transform(self, input_df):
-            out_df = (
-                input_df[[self.column]]
-                .merge(self.agg_df_, on=self.column, how="left")
-                .fillna(self.fill_value)
-                .drop(columns=self.column)
-            )
-            return out_df.add_prefix(f"{self.column}_age_")
+
+        AgeAggregatedBlock(BaseBlock):
+            def __init__(self, column, aggs, fill_value=None):
+                self.column = column
+                self.aggs = aggs
+                self.fill_value = fill_value
+
+            def fit(self, input_df, y=None):
+                self.agg_df_ = input_df.groupby(self.column)["age"].agg(self.aggs)
+                return self.transform(input_df)
+
+            def transform(self, input_df):
+                out_df = (
+                    input_df[[self.column]]
+                    .merge(self.agg_df_, on=self.column, how="left")
+                    .drop(columns=self.column)
+                )
+                if self.fill_value is not None:
+                    out_df = out_df.fillna(self.fill_value)
+                return out_df.add_prefix(f"{self.column}_age_")
+
+
+        feature_blocks = [
+            *[RawValueBlock(col) for col in ["col1", "col2"]],
+            AgeAggregatedBlock("col3", fill_value=0.0),
+        ]
+
+        X_train = pd.DataFrame()
+        X_test = pd.DataFrame()
+        for block in feature_blocks:
+            feature_train = block.fit(train, y=train["target"])
+            feature_test = block.transform(test)
+            X_train = pd.concat([X_train, feature_train], axis=1)
+            X_test = pd.concat([X_test, feature_test], axis=1)
     """
 
     def fit(self, input_df: pd.DataFrame, y: pd.Series = None) -> pd.DataFrame:
