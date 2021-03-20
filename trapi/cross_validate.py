@@ -1,10 +1,22 @@
+from typing import Any, Dict, List
+
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import BaseCrossValidator
 
 from trapi.train import train_with_lightgbm
 
 
-def cross_validate(cv, X, y, params, groups=None, tune=False, **kwargs):
+def cross_validate(
+    cv: BaseCrossValidator,
+    X: pd.DataFrame,
+    y: pd.Series,
+    params: Dict[str, Any],
+    groups: pd.Series = None,
+    tune: bool = False,
+    **kwargs,
+) -> (List[lgb.Booster], pd.DataFrame, pd.DataFrame):
     """
     Function to run cross-validation.
 
@@ -12,20 +24,19 @@ def cross_validate(cv, X, y, params, groups=None, tune=False, **kwargs):
         cv (BaseCrossValidator): Cross-validation generator.
         X (pd.DataFrame): Training data.
         y (pd.Series): Target.
-        params (dict(str)): Lightgbm parameters.
+        params (Dict(str, Any)): LightGBM parameters.
         groups (pd.Series, optional): Group labels for the samples. Defaults to None.
         tune (bool, optional): If run tuning or not. Defaults to False.
 
     Returns:
-        list(Booster): List of trained lightgbm boosters.
-        np.array: Target true values.
-        np.array: Target predicted values.
-        pd.DataFrame: DataFrame with ["feature", "split", "gain", "fold"] columns.
+        List(lgb.Booster): List of trained lightgbm boosters.
+        pd.DataFrame: Dataframe with ["true", "pred"] columns, which use for model evaluation.
+        pd.DataFrame: Dataframe with ["feature", "split", "gain", "fold"] columns, which use for feature importance plot.
     """
     models = []
     y_true = np.array([])
     y_pred = np.array([])
-    df_imp = pd.DataFrame()
+    imp_df = pd.DataFrame()
 
     for i, (train_idx, valid_idx) in enumerate(cv.split(X, y, groups=groups)):
         fold = i + 1
@@ -48,7 +59,10 @@ def cross_validate(cv, X, y, params, groups=None, tune=False, **kwargs):
         _df["split"] = model.feature_importance("split")
         _df["gain"] = model.feature_importance("gain")
         _df["fold"] = fold
-        df_imp = pd.concat([df_imp, _df])
+        imp_df = pd.concat([imp_df, _df])
     print("--------------------------------------------------")
 
-    return models, y_true, y_pred, df_imp
+    eval_df = pd.DataFrame({"true": y_true, "pred": y_pred})
+    imp_df = imp_df.reset_index(drop=True)
+
+    return models, eval_df, imp_df

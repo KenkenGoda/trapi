@@ -1,8 +1,17 @@
+from typing import Tuple
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
 
 
-def plot_feature_importance(df, importance_type="split", n_plot=20, figsize=(10, 10)):
+def plot_feature_importance(
+    df: pd.DataFrame,
+    importance_type: str = "split",
+    n_plot: int = 20,
+    figsize: Tuple(int) = (10, 10),
+):
     """
     Function to plot feature importance.
 
@@ -19,15 +28,17 @@ def plot_feature_importance(df, importance_type="split", n_plot=20, figsize=(10,
         .head(n_plot)
         .index
     )
-    df_plot = df.loc[df["feature"].isin(cols)].sort_values(
+    plot_df = df.loc[df["feature"].isin(cols)].sort_values(
         importance_type, ascending=False
     )
     plt.figure(figsize=figsize)
-    sns.barplot(x=importance_type, y="feature", data=df_plot)
+    sns.barplot(x=importance_type, y="feature", data=plot_df)
     plt.show()
 
 
-def plot_prediction_distribution(valid_pred, test_pred, figsize=(7, 5)):
+def plot_prediction_distribution(
+    valid_pred: np.array, test_pred: np.array, figsize: Tuple(int) = (7, 5)
+):
     """
     Function to plot prediction distribution.
 
