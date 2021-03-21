@@ -1,7 +1,7 @@
 from typing import List
 
 import pandas as pd
-from sklearn.preprocess import LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 
 
 class BaseBlock:
