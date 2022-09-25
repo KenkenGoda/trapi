@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import BaseCrossValidator
 
-from trapi.train import train_with_lightgbm
+from train import train_lightgbm
 
 
 def cross_validate(
@@ -14,6 +14,7 @@ def cross_validate(
     y: pd.Series,
     params: Dict[str, Any],
     groups: pd.Series = None,
+    *,
     tune: bool = False,
     **kwargs,
 ) -> (List[lgb.Booster], pd.DataFrame, pd.DataFrame):
@@ -46,7 +47,7 @@ def cross_validate(
         X_train, X_valid = X.iloc[train_idx], X.iloc[valid_idx]
         y_train, y_valid = y.iloc[train_idx], y.iloc[valid_idx]
 
-        model = train_with_lightgbm(
+        model = train_lightgbm(
             X_train, y_train, X_valid, y_valid, params, tune=tune, **kwargs
         )
 

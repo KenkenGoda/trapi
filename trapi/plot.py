@@ -33,6 +33,7 @@ def plot_feature_importance(
     )
     plt.figure(figsize=figsize)
     sns.barplot(x=importance_type, y="feature", data=plot_df)
+    plt.tight_layout()
     plt.show()
 
 
@@ -52,4 +53,5 @@ def plot_prediction_distribution(
     sns.histplot(test_pred, stat="density", color="red", alpha=0.3, label="test")
     plt.legend()
     plt.grid()
+    plt.tight_layout()
     plt.show()

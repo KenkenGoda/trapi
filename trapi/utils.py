@@ -1,5 +1,38 @@
+import os
+import random
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
+import torch
+
+
+def set_seed(seed: int):
+    """
+    Function to set seed.
+
+    Args
+        seed (int): Seed number.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.use_deterministic_algorithms = True
+
+
+def logger(message: str):
+    """
+    Function to show log.
+
+    Args:
+        message (str): Message shown as log.
+    """
+    now_string = str(datetime.now().strftime("%H:%M:%S"))
+    print(f"[{now_string}] - {message}")
 
 
 def reduce_mem_usage(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
@@ -51,9 +84,5 @@ def reduce_mem_usage(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
     end_mem = df.memory_usage().sum() / 1024 ** 2
     if verbose:
         ratio = (start_mem - end_mem) / start_mem * 100
-        print(
-            "Mem. usage decreased to {:5.2f} Mb ({:.1f}% reduction)".format(
-                end_mem, ratio
-            )
-        )
+        logger(f"Mem. usage decreased to {end_mem:.2f} Mb ({ratio:.1f}% reduction)")
     return df
